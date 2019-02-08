@@ -2,21 +2,42 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
+using System.Threading;
 
 namespace WcfServiceLibrary1
 {
     // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "Service1" in both code and config file together.
     public class Service1 : IService1
     {
+        public static void DeleteFilesAndFoldersRecursively(string target_dir)
+        {
+            foreach (string file in Directory.GetFiles(target_dir))
+            {
+                File.SetAttributes(file, FileAttributes.Normal);
+                File.Delete(file);
+            }
+            foreach (string subDir in Directory.GetDirectories(target_dir))
+            {
+                DeleteFilesAndFoldersRecursively(subDir);
+            }
+            Thread.Sleep(1); // This makes the difference between whether it works or not. Sleep(0) is not enough.
+            Directory.Delete(target_dir);
+        }
+
         public List<Model> GetData(int value)
         {
-            List<Model> _lista = new List<Model>();
-            string a = " ";
-            using (var repo = new Repository(@"D:\Projekty"))
+            List<Model> _lista = new List<Model>();            
+            string url = "https://github.com/TestowyGit01/projekt";
+            string projectPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            string folderName = Path.Combine(projectPath, "Folder");
+
+            string clonedRepoPath = Repository.Clone(url, folderName);
+            using (var repo = new Repository(clonedRepoPath))
             {
                 foreach (Commit c in repo.Commits)
                 {
@@ -25,26 +46,9 @@ namespace WcfServiceLibrary1
                     asa.Data = c.Author.When;
                     _lista.Add(asa);
                 }
-                //var RFC2822Format = "ddd dd MMM HH:mm:ss yyyy K";
-
-                //foreach (Commit c in repo.Commits.Take(15))
-                //{
-                //    Console.WriteLine(string.Format("commit {0}", c.Id));
-
-                //    if (c.Parents.Count() > 1)
-                //    {
-                //        Console.WriteLine("Merge: {0}",
-                //            string.Join(" ", c.Parents.Select(p => p.Id.Sha.Substring(0, 7)).ToArray()));
-                //    }
-
-                //    Console.WriteLine(string.Format("Author: {0} <{1}>", c.Author.Name, c.Author.Email));
-                //    Console.WriteLine("Date:   {0}", c.Author.When.ToString(RFC2822Format, CultureInfo.InvariantCulture));
-                //    Console.WriteLine();
-                //    Console.WriteLine(c.Message);
-                //    Console.WriteLine();
-                //    a = "Date:  " + c.Author.Name;
-                //}
             }
+            DeleteFilesAndFoldersRecursively(folderName);
+
             return _lista;
         }
     }
