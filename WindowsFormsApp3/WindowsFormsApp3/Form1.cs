@@ -56,7 +56,7 @@ namespace WindowsFormsApp3
             // Read the output stream first and then wait.
             string output = p.StandardOutput.ReadToEnd();
             p.WaitForExit();
-            return output;
+            return output ;
         }
 
         public void B()
