@@ -19,23 +19,23 @@ namespace WindowsFormsApp3
             InitializeComponent();
         }
 
-        public void A()
-        {
-            string directory = ""; // directory of the git repository
+        //public void A()
+        //{
+        //    string directory = @"D:\GIT\projekt"; // directory of the git repository
 
-            using (PowerShell powershell = PowerShell.Create())
-            {
-                // this changes from the user folder that PowerShell starts up with to your git repository
-                powershell.AddScript(String.Format(@"cd {0}", directory));
+        //    using (PowerShell powershell = PowerShell.Create())
+        //    {
+        //        // this changes from the user folder that PowerShell starts up with to your git repository
+        //        powershell.AddScript(String.Format(@"cd {0}", directory));
 
-                powershell.AddScript(@"git init");
-                powershell.AddScript(@"git add *");
-                powershell.AddScript(@"git commit -m 'git commit from PowerShell in C#'");
-                powershell.AddScript(@"git push");
+        //        powershell.AddScript(@"git init");
+        //        powershell.AddScript(@"git add *");
+        //        powershell.AddScript(@"git commit -m 'git commit from PowerShell in C#'");
+        //        powershell.AddScript(@"git push");
 
-                Collection<PSObject> results = powershell.Invoke();
-            }
-        }
+        //        Collection<PSObject> results = powershell.Invoke();
+        //    }
+        //}
 
         public static string ListShaWithFiles(string path)
         {
@@ -59,9 +59,22 @@ namespace WindowsFormsApp3
             return output;
         }
 
+        public void B()
+        {
+            string gitCommand = "git";
+            string gitAddArgument = @"add -A";
+            string gitCommitArgument = @"commit ""explanations_of_changes"" ";
+            string gitPushArgument = @"push our_remote";
+
+            Process.Start(gitCommand, gitAddArgument);
+            Process.Start(gitCommand, gitCommitArgument);
+            Process.Start(gitCommand, gitPushArgument);
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
-
+            B();
+            //A();
         }
     }
 }
