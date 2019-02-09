@@ -61,10 +61,17 @@ namespace WindowsFormsApp3
 
         public void B()
         {
+            Process p = new Process();
             string gitCommand = "git";
             string gitAddArgument = @"add -A";
             string gitCommitArgument = @"commit ""explanations_of_changes"" ";
             string gitPushArgument = @"push our_remote";
+
+            p.StartInfo.UseShellExecute = false;
+            p.StartInfo.RedirectStandardOutput = true;
+            //p.StartInfo.FileName = Config.GitExectuable;
+            p.StartInfo.Arguments = "s";
+            p.Start();
 
             Process.Start(gitCommand, gitAddArgument);
             Process.Start(gitCommand, gitCommitArgument);
