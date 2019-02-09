@@ -33,8 +33,8 @@ namespace WcfServiceLibrary1
         {
             List<Model> _lista = new List<Model>();            
             string url = "https://github.com/TestowyGit01/projekt";
-            string projectPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
-            string folderName = Path.Combine(projectPath, "Folder");
+            string projectPath = AppDomain.CurrentDomain.BaseDirectory;
+            string folderName = Path.Combine(projectPath, "Git_tmp");
 
             string clonedRepoPath = Repository.Clone(url, folderName);
             using (var repo = new Repository(clonedRepoPath))
